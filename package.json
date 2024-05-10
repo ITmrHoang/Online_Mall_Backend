@@ -1,0 +1,33 @@
+{
+  "name": "onlinemall-be",
+  "version": "1.0.0",
+  "description": "HimoDevVN project for online",
+  "private": true,
+  "main": "app.js",
+  "type": "module",
+  "scripts": {
+    "start": "node  app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ITmrHoang/Online_Mall_Backend.git"
+  },
+  "author": "HimoDev (HimoDevVN@gmail.com)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ITmrHoang/Online_Mall_Backend/issues"
+  },
+  "homepage": "https://github.com/ITmrHoang/Online_Mall_Backend#readme",
+  "dependencies": {
+    "cookie-parser": "~1.4.4",
+    "debug": "~2.6.9",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "http-errors": "~1.6.3",
+    "jsonwebtoken": "^9.0.2",
+    "morgan": "~1.9.1",
+    "pg-promise": "^11.6.0",
+    "pug": "^3.0.2"
+  }
+}
