@@ -4,17 +4,22 @@ import path from 'path';
 import cookieParser from 'cookie-parser';
 import logger from 'morgan';
 
-import indexRouter from './routes/index.cjs';
-import usersRouter from './routes/users.cjs';
-import authRouter from './routes/auth.js';
+
+import indexRouter from './routers/index.cjs';
+import usersRouter from './routers/users.cjs';
+import authRouter from './routers/auth.js';
 
 // get file name and root path
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
-import DB from './core/database.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
+
+// Đăng ký alias
+// const __dirname = path.resolve();
+
+
 
 var app = express();
 
@@ -49,7 +54,6 @@ app.get('/infor-app',(req, res) => {
 })
 
 app.get('/test',(req, res) => {
-  const db = new DB('postgres')
   res.send({
     "name":APP_NAME,
   })

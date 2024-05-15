@@ -111,4 +111,55 @@ class DB_POSTGRES extends InterfaceDB {
   //   }
 }
 
-export default DB;
+export { DB };
+
+import { PrismaClient } from "@prisma/client";
+const prisma = new PrismaClient();
+
+export class BaseModel {
+  constructor(model = null) {
+    if (
+      model &&
+      (model instanceof String ||
+        Object.prototype.toString.call(model) === "[object String]")
+    ) {
+      this.model = model;
+    } else {
+      this.model = this.getClassName();
+    }
+  }
+  getClassName() {
+    return this.constructor.name;
+  }
+
+  async create(data) {
+    return await prisma[this.model].create({
+      data,
+    });
+  }
+
+  async findUnique(where) {
+    return await prisma[this.model].findUnique({
+      where,
+    });
+  }
+
+  async findMany(where) {
+    return await prisma[this.model].findMany({
+      where,
+    });
+  }
+
+  async update(where, data) {
+    return await prisma[this.model].update({
+      where,
+      data,
+    });
+  }
+
+  async delete(where) {
+    return await prisma[this.model].delete({
+      where,
+    });
+  }
+}
