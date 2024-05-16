@@ -1,8 +1,14 @@
-import { BaseModel } from '../core/database.js';
-class UserModel extends BaseModel {
+import { BaseRepository, BaseService } from '../core/database.js';
+export class UserModel extends BaseRepository {
         constructor() {
             super("User");
         }
 }
 
-export default new UserModel();
+export class UserService extends BaseService {
+    getRepository() {
+       return new UserModel()
+    }
+}
+
+export default new UserService();

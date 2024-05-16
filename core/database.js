@@ -116,7 +116,7 @@ export { DB };
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
-export class BaseModel {
+export class BaseRepository {
   constructor(model = null) {
     if (
       model &&
@@ -127,6 +127,10 @@ export class BaseModel {
     } else {
       this.model = this.getClassName();
     }
+  }
+
+  getModel() {
+    return prisma[this.model];
   }
   getClassName() {
     return this.constructor.name;
@@ -141,6 +145,14 @@ export class BaseModel {
   async findUnique(where) {
     return await prisma[this.model].findUnique({
       where,
+    });
+  }
+
+  async findById(id) {
+    return await prisma[this.model].findUnique({
+      where: {
+        id,
+      },
     });
   }
 
@@ -161,5 +173,52 @@ export class BaseModel {
     return await prisma[this.model].delete({
       where,
     });
+  }
+}
+
+export class BaseService {
+  _repository = null;
+  constructor(repository) {
+    if (repository) {
+      this._repository = repository;
+    } else {
+      this._repository = this.getRepository();
+    }
+  }
+
+  /**
+   * @param {any} val
+   */
+  set _repository(val) {
+    throw new Error("Method not define for type.");
+  }
+  setRepository() {
+    this._repository = this.getRepository();
+  }
+
+  getRepository() {
+    // code get and for set repository
+  }
+
+  create(data) {
+    return this._repository.create(data);
+  }
+  findUnique(where) {
+    return this._repository.findUnique(where);
+  }
+  getById(id) {
+    return this._repository.findById(id);
+  }
+
+  update(where, data) {
+    return this._repository.update(where, data);
+  }
+
+  delete(where) {
+    return this._repository.delete(where);
+  }
+
+  getAll() {
+    return this._repository.findMany();
   }
 }

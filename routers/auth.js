@@ -5,32 +5,27 @@ import {
   verifyToken,
 } from "../core/authentication.js";
 
-import { hashPassword, comparePassword} from "../core/helpers.js";
+import { hashPassword, comparePassword } from "../core/helpers.js";
 
 import { Router } from "express";
 import { body, validationResult } from "express-validator";
 
 import UserService from "../services/user.service.js";
 
+import AuthService from "../services/auth.service.js";
+
 const router = Router();
-const userId = { id: "user_id" };
-router.post(["/auth/token", "/login"], async function (req, res, next) {
+router.post(["/auth/token", "/login"], function (req, res, next) {
   const { username, password } = req.body;
-  console.log(username,password);
-  const user = await UserService.findUnique({
-      username: username ,
-  })
-  if (!user) {
-    return res.status(404).json({ message: "User not found" });
-  }
-
-  if(! comparePassword(password, user.password)) {
-    return res.status(404).json({ message: "Password dont matching" });
-
-  }
-  const accessToken = createToken({username: username});
-  const token_refresh = createRefreshToken({username: username});
-  res.json({ accessToken, refreshToken: token_refresh });
+  AuthService.login(username, password)
+    .then((resp) => {
+      const { accessToken, refreshToken } = resp;
+      res.json({ accessToken, refreshToken });
+    })
+    .catch((error) => {
+      console.log(error);
+      res.status(error.status || 500).json({ error: error.message });
+    });
 });
 
 // Route để kiểm tra token
@@ -75,19 +70,30 @@ router.post("/auth/refresh", (req, res) => {
 router.post(
   "/register",
   [
-    body("username").notEmpty().isString()
+    body("username")
+      .notEmpty()
+      .isString()
       .isLength({ min: 5 })
       .withMessage("Username must be at least 5 chars long"),
-    body("email").isEmail().notEmpty().isString().withMessage("Email must be valid"),
-    body("password").notEmpty().isString()
+    body("email")
+      .isEmail()
+      .notEmpty()
+      .isString()
+      .withMessage("Email must be valid"),
+    body("password")
+      .notEmpty()
+      .isString()
       .isLength({ min: 8 })
       .withMessage("Password must be at least 8 chars long"),
-    body("confirm_password").notEmpty().isString().custom((value, { req }) => {
-      if (value !== req.body.password) {
-        throw new Error("Password confirmation does not match password");
-      }
-      return true;
-    }),
+    body("confirm_password")
+      .notEmpty()
+      .isString()
+      .custom((value, { req }) => {
+        if (value !== req.body.password) {
+          throw new Error("Password confirmation does not match password");
+        }
+        return true;
+      }),
   ],
   async (req, res) => {
     const errors = validationResult(req);
@@ -96,13 +102,16 @@ router.post(
     }
 
     const { username, email, password } = req.body;
-    
+
     try {
-      const data =  await UserService.create({username, email, 'password': hashPassword(password)})
+      const data = await UserService.create({
+        username,
+        email,
+        password: hashPassword(password),
+      });
       res.json({ message: "Create successfuly" });
     } catch (err) {
       res.status(400).json({ errors: err.message });
-
     }
   }
 );
