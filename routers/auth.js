@@ -113,7 +113,7 @@ router.post(
     } catch (err) {
       res.status(400).json({ errors: err.message });
     }
-  }
+  },
 );
 
 export default router;

@@ -3,10 +3,10 @@ import { RefreshToken } from "./refreshtoken.service.js";
 import { UserService } from "./user.service.js";
 import { hashPassword, comparePassword } from "../core/helpers.js";
 import {
-    createToken,
-    createRefreshToken,
-    verifyToken,
-  } from "../core/authentication.js";
+  createToken,
+  createRefreshToken,
+  verifyToken,
+} from "../core/authentication.js";
 export class AuthService extends BaseService {
   constructor() {
     super();
@@ -17,12 +17,12 @@ export class AuthService extends BaseService {
       username: username,
     });
     if (!user) {
-        throw { status: 404, message: 'User not found' };
+      throw { status: 404, message: "User not found" };
     }
-    console.log(password,  user.password);
+    console.log(password, user.password);
 
     if (!comparePassword(password, user.password)) {
-        return Promise.reject({ status: 401, message: 'Invalid password' });
+      return Promise.reject({ status: 401, message: "Invalid password" });
     }
     const accessToken = createToken({ username: username });
     const refreshToken = createRefreshToken({ username: username });

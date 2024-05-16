@@ -93,7 +93,7 @@ class DB_POSTGRES extends InterfaceDB {
         const Postgres = module.default;
         const pgp = new Postgres();
         const db = pgp(
-          `postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}`
+          `postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}`,
         );
         this.db = db;
       })

@@ -1,5 +1,10 @@
 import jwt from "jsonwebtoken";
-import {SECRET_KEY, EXPIRES_TOKEN, SECRET_KEY_REFRESH, EXPIRES_REFRESH} from "./constants.js";
+import {
+  SECRET_KEY,
+  EXPIRES_TOKEN,
+  SECRET_KEY_REFRESH,
+  EXPIRES_REFRESH,
+} from "./constants.js";
 
 // Hàm tạo token
 export function createToken(data, exp = null) {
@@ -7,7 +12,9 @@ export function createToken(data, exp = null) {
 }
 
 export function createRefreshToken(data, exp = null) {
-  return jwt.sign(data, SECRET_KEY_REFRESH, { expiresIn: exp ?? EXPIRES_REFRESH });
+  return jwt.sign(data, SECRET_KEY_REFRESH, {
+    expiresIn: exp ?? EXPIRES_REFRESH,
+  });
 }
 
 export function verifyToken(token) {

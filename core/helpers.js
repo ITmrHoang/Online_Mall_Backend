@@ -1,20 +1,19 @@
-import bcrypt from 'bcrypt';
+import bcrypt from "bcrypt";
 
-const saltRounds = 8
-
+const saltRounds = 8;
 
 export const hashPassword = (password) => {
   return bcrypt.hashSync(password, saltRounds);
-}
+};
 
 export const comparePassword = (password, hash) => {
   return bcrypt.compareSync(password, hash);
-}
+};
 
 export default {
   hashPassword,
-  comparePassword
-}
+  comparePassword,
+};
 
 // TODO Wapper errors handler
 // function wrapWithErrorHandler(targetClass) {

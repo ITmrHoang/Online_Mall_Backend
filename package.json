@@ -8,7 +8,8 @@
   "scripts": {
     "start": "node  app.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "startdev": "node --watch app.js"
+    "startdev": "node --watch app.js",
+    "format": "prettier --write \"./**/*.{js,jsx,ts,tsx,cjs,css,scss}\""
   },
   "repository": {
     "type": "git",
@@ -37,6 +38,7 @@
     "pug": "^3.0.2"
   },
   "devDependencies": {
+    "prettier": "^3.2.5",
     "prisma": "^5.13.0"
   }
 }
