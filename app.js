@@ -15,11 +15,14 @@ import { dirname } from "path";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
+import cors from "cors";
 // Đăng ký alias
 // const __dirname = path.resolve();
 
 var app = express();
 
+// Sử dụng middleware cors
+app.use(cors());
 // load environment variables
 import dotenv from "dotenv";
 dotenv.config();

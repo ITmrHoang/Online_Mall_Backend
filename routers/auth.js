@@ -1,9 +1,5 @@
 import express from "express";
-import {
-  createToken,
-  createRefreshToken,
-  verifyToken,
-} from "../core/authentication.js";
+import { createToken, createRefreshToken, verifyToken, verifyRefreshToken } from "../core/authentication.js";
 
 import { hashPassword, comparePassword } from "../core/helpers.js";
 
@@ -41,7 +37,8 @@ router.get(["/auth/check-token", "/auth/user"], (req, res) => {
       return res.json({ data: decoded });
     })
     .catch((err) => {
-      return res.status(403).json({ message: "Token is invalid" });
+      console.log(err);
+      return res.status(401).json({ message: "Token expired" });
     });
 });
 
@@ -52,13 +49,13 @@ router.post("/auth/refresh", (req, res) => {
     return res.status(403).json({ message: "Token is invalid" });
   }
   // Nếu refresh token hợp lệ, tạo mới access token
-  verifyToken(refreshToken)
+  verifyRefreshToken(refreshToken)
     .then((decoded) => {
       delete decoded.message;
       const { exp, ..._decoded } = decoded;
       console.log(_decoded);
 
-      const accessToken = createToken(_decoded);
+      const accessToken = createToken(_decoded, "1 day");
       return res.json({ accessToken });
     })
     .catch((err) => {
@@ -70,21 +67,9 @@ router.post("/auth/refresh", (req, res) => {
 router.post(
   "/register",
   [
-    body("username")
-      .notEmpty()
-      .isString()
-      .isLength({ min: 5 })
-      .withMessage("Username must be at least 5 chars long"),
-    body("email")
-      .isEmail()
-      .notEmpty()
-      .isString()
-      .withMessage("Email must be valid"),
-    body("password")
-      .notEmpty()
-      .isString()
-      .isLength({ min: 8 })
-      .withMessage("Password must be at least 8 chars long"),
+    body("username").notEmpty().isString().isLength({ min: 5 }).withMessage("Username must be at least 5 chars long"),
+    body("email").isEmail().notEmpty().isString().withMessage("Email must be valid"),
+    body("password").notEmpty().isString().isLength({ min: 8 }).withMessage("Password must be at least 8 chars long"),
     body("confirm_password")
       .notEmpty()
       .isString()
